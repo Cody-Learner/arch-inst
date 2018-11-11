@@ -15,13 +15,13 @@ I'll leave getting it going to you.
 From the Arch install iso run:
 
 Fetch the script: <br>
- # wget https://raw.githubusercontent.com/Cody-Learner/saist/master/inst <br>
- # chmod +x inst
+ wget https://raw.githubusercontent.com/Cody-Learner/saist/master/inst <br>
+ chmod +x inst
 
 Or optionally, use tinyurl: <br>
- # wget https://tinyurl.com/instarch <br> 
- # mv instarch inst <br> 
- # chmod +x inst
+ wget https://tinyurl.com/instarch <br> 
+ mv instarch inst <br> 
+ chmod +x inst
 
 Verify file integrity: <br>
  # md5sum inst
@@ -31,5 +31,5 @@ Should be: <br>
 
 
 To run the script:
- # ./inst
+ ./inst
 
