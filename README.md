@@ -24,7 +24,7 @@ Or optionally, use tinyurl: <br>
  chmod +x inst
 
 Verify file integrity: <br>
- # md5sum inst
+ md5sum inst
 
 Should be: <br>
 7747bb06e2036c2df14c1d63f84650ff  inst
