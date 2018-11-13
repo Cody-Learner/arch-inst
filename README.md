@@ -34,6 +34,6 @@ To start the script run: <br>
  ./inst
 
 The script will initially set up logging via an alias in the arch iso. This will take just a few seconds, then a message appears. <br>
-Follow the instructions from there which are: 
-Exit the terminal or source .zshrc. 
+Follow the instructions from there which are: <br>
+Exit the terminal or source .zshrc. <br>
 Call the script using 'inst', rather than './inst' the second time.
