@@ -1,23 +1,25 @@
 #!/bin/bash
-# inst-2018-11-10
+# inst-2018-13-10
 #
-# Search for '#=====#=====#' to find/edit customizations.
-#
+# My Arch install script
 
-####    SET UP A LOCAL PACMAN CACHE EXAMPLE:
-####  After symlinking contents of  /var/cache/pacman/pkg/  ,  /var/lib/pacman/sync/  to  /home/$USER/www/repo/
+####    SET UP A LOCAL PACMAN CACHE:
+####  Symlink contents of /var/cache/pacman/pkg/, /var/cache/pacman/aur, /var/lib/pacman/sync/ to /home/$USER/www/repo/
 ####  Run sudo pacman -Sw --cachedir /home/$USER/www/repo/ --needed base base-devel <all other needed packages>
-####  Above command downloads any packages not installed in the "local pacman cache" of the server.
-####  Install darkhttpd (webfs won't do symlinks) and run:
-####  $ darkhttpd /home/$USER/www/repo --port 8080
-####  To use it, for this case, add 'Server = http://192.168.2.2:8080/' as the top entry in /etc/pacman.d/mirrorlist
-####  See line 77
+####  This will download any packages not installed on the server to "local pacman cache"
+####  Install darkhttpd (webfs won't do symlinks) and run: $ darkhttpd /home/$USER/www/repo --port 8080
 
+#=====#=====# Set up alias and logging #===========#
 
-#=====#=====# logging #===========# (breaks nano use in script)
-# exec &> >(tee -a install.log) >&1
-# exec 2>&1 | tee install.log
-
+if	[[ -z $(tail -n 1 /root/.zshrc|grep inst.log) ]]; then
+	echo "alias inst='script -c /root/inst /root/inst.log'" >>/root/.zshrc
+	touch /root/one
+fi
+if	[[ -e /root/one ]]; then
+	rm /root/one
+	echo; echo "zsh alias, logging set up. Start with inst, (not ./inst) after exiting or sourcing .zshrc"; echo
+	exit
+fi
 
 #=====#=====# User, password, hostname, editor variables. #===========#
 
@@ -26,6 +28,7 @@ URP=test	## User Password ##
 RTP=test	## Root Password ##
 HTN=archtest	## Hostname      ##
 EDR=nano	## Editor        ##
+
 
 #=====#=====# Partition variables. #===========#
 
@@ -65,14 +68,13 @@ mounts(){
 	mkdir -p /mnt/home
 	mount $HOMEP  /mnt/home
 	swapon $SWAP
-
 }
+
+#=====#=====# Local pacman cache/repo & mirrorlist #===========#
 
 setrepos(){
 
-	pacman -Sy --noconfirm --needed reflector
-
-#=====#=====# Local pacman cache/repo in mirrorlist #===========#
+	pacman -Sy --noconfirm --needed reflector wgetpaste
 
 	echo 'Server = http://192.168.2.2:8080/' > /etc/pacman.d/mirrorlist
 
@@ -142,7 +144,7 @@ mesg(){
 
 	echo " The install is done except verifying and editing config files."
 	echo " Answering no here will exit, completing the install."
-	echo " Answering no after this will skip the named file."; echo
+	echo " Answering no after this will skip the named file/s."; echo
 }
 
 asksure(){
@@ -229,7 +231,11 @@ umnts(){
 	umount $HOMEP 
 	umount $ROOTP
 	swapoff $SWAP
-	echo; echo " Install Completed"; echo
+	lurl=$(wgetpaste /root/inst.log 2>/dev/null )
+	surl=$(wgetpaste -u $lurl 2>/dev/null )
+	echo "Remote log long URL : $lurl"
+	echo "Remote log short URL: $surl"
+	echo; echo " Install Completed."; echo	
 }
 
 ## Run Functions ##
