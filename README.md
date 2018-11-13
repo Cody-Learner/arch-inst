@@ -30,6 +30,10 @@ Verify file integrity: <br>
 Should be: b8a77c24e53722c69b6f520c4c11de6a  inst
 
 
-To run the script: <br>
+To start the script run: <br>
  ./inst
 
+The script will initially set up logging via an alias in the arch iso. This will take just a few seconds, then a message appears. <br>
+Follow the instructions from there which are: 
+Exit the terminal or source .zshrc. 
+Call the script using 'inst', rather than './inst' the second time.
