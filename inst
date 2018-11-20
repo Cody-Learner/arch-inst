@@ -76,7 +76,7 @@ setrepos(){
 
 	pacman -Sy --noconfirm --needed reflector wgetpaste
 
-	echo 'Server = http://192.168.2.2:8080/' > /etc/pacman.d/mirrorlist
+#	echo 'Server = http://192.168X.XXX.XXX:XXXX/' > /etc/pacman.d/mirrorlist
 
 	reflector --latest 5 --sort rate >> /etc/pacman.d/mirrorlist
 	echo; echo "Next we'll drop you in the mirrorlist in nano."
