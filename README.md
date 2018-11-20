@@ -34,7 +34,7 @@ To start the script run: <br>
 2018-11-19 EDIT: Logging is currently a wip, has changed, and is not yet feature stable.<br>
 
 Testing:
- * Tried all the std pipe + tee combos. Screws up nano usage in script when redirecting stderr, ie 2>&1 or |&. <br>
+ * Tried all the std redirection, pipe + tee, w and w/o process substitution combos. Screws up nano usage in script when redirecting stderr, ie 2>&1 or |&. <br>
    (I've since learned using an interactive editor in a script is considered "poorly designed", but too tenacious to give up just yet.) <br>
  * named pipes (fifo's) and redirection <br>
  * 'logsave' program using 'more' as the log reader <br>
