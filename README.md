@@ -36,6 +36,7 @@ To start the script run: <br>
 Testing:
  * Tried all the std redirection, pipe + tee, w and w/o process substitution combos. Screws up nano usage in script when redirecting stderr, ie 2>&1 or |&. <br>
    (I've since learned using an interactive editor in a script is considered "poorly designed", but too tenacious to give up just yet.) <br>
+ * 'script' program. Too many lines output, ie: too large for remote log saving.
  * named pipes (fifo's) and redirection <br>
  * 'logsave' program using 'more' as the log reader <br>
  * asciinema terminal recorder and player <br>
