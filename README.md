@@ -37,3 +37,6 @@ The script will initially set up logging via an alias in the arch iso. This will
 Follow the instructions from there which are: <br>
 Exit the terminal or source .zshrc. <br>
 Call the script using 'inst', rather than './inst' the second time.
+<br>
+<br>
+Screenshot inst.log: https://cody-learner.github.io/logsave.html
