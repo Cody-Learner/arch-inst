@@ -26,7 +26,7 @@ Or optionally, use tinyurl: <br>
 
 Verify file integrity: <br>
  $ md5sum inst
-dfca063950a6c3ccbff491f9a298e70f  inst
+1a142b095ab160df69f5040f0ea216fa  inst
 
 To start the script run: <br>
  ./inst

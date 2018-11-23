@@ -1,89 +1,89 @@
 #!/bin/bash
-# inst-2018-13-10
+# inst-2018-11-23
 #
-# My Arch install script
+# Arch install script
 
-####    SET UP A LOCAL PACMAN CACHE:
-####  Symlink contents of /var/cache/pacman/pkg/, /var/cache/pacman/aur, /var/lib/pacman/sync/ to /home/$USER/www/repo/
-####  Run sudo pacman -Sw --cachedir /home/$USER/www/repo/ --needed base base-devel <all other needed packages>
-####  This will download any packages not installed on the server to "local pacman cache"
+# shellcheck disable=SC2002,SC2016
+####  ---------------------------------------------------------------------------------------------------------------------------------------
+####  SET UP A LOCAL PACMAN CACHE:
+####  Symlink (-s) directory :  /var/cache/pacman/pkg/   to   /home/$USER/www/repo/
+####  Symlink contents of :     /var/cache/pacman/aur   and   /var/lib/pacman/sync/   to   /home/$USER/www/repo/
+####  ---------------------------------------------------------------------------------------------------------------------------------------
+####  sudo pacman -Sw --cachedir /home/$USER/www/repo/ --needed base base-devel <all other needed packages>
+####  sudo pacman -Syuw --cachedir /home/$USER/www/repo/
 ####  Install darkhttpd (webfs won't do symlinks) and run: $ darkhttpd /home/$USER/www/repo --port 8080
+####  ---------------------------------------------------------------------------------------------------------------------------------------
+####  THIS INSTALL:
+####  sudo pacman -Sw --cachedir /home/$USER/www/repo/ --needed base base-devel grub wget sudo xorg-server xorg-xinit xterm xorg-fonts xorg-twm \
+####  virtualbox-guest-utils virtualbox-guest-modules-arch linux-headers polkit ttf-dejavu ttf-liberation leafpad xfce4 xfce4-goodies gvfs
+####  ---------------------------------------------------------------------------------------------------------------------------------------
 
-#=====#=====# Set up alias and logging #===========#
+Fn1=0; Fn2=0; Fn3=0; Fn4=0; Fn5=0; Fn6=0; Fn7=0; Fn8=0; Fn9=0
+set -uo pipefail
+trap 'S="${?}" ; echo "${0}" : Error on line "${LINENO}" : "${BASH_COMMAND}" ; exit "${S}"' ERR
 
-if	[[ -z $(tail -n 1 /root/.zshrc|grep inst.log) ]]; then
-	echo "alias inst='script -c /root/inst /root/inst.log'" >>/root/.zshrc
-	touch /root/one
-fi
-if	[[ -e /root/one ]]; then
-	rm /root/one
-	echo; echo "zsh alias, logging set up. Start with inst, (not ./inst) after exiting or sourcing .zshrc"; echo
+### Save me from myself! Prevent running on my system in case 'chmod +x' gets set.
+
+if 	[[ $(hostname) = Arch2014p9 ]]; then
+	echo " YOU REALLY DO NOT WANT TO RUN THIS "
 	exit
 fi
 
 #=====#=====# User, password, hostname, editor variables. #===========#
 
-URN=jeff	## Username      ##
-URP=test	## User Password ##
-RTP=test	## Root Password ##
-HTN=archtest	## Hostname      ##
-EDR=nano	## Editor        ##
-
+URN="jeff"	## Username      ##
+URP="test"	## User Password ##
+RTP="test"	## Root Password ##
+HTN="archtest"	## Hostname      ##
+EDR="nano"	## Editor        ##
 
 #=====#=====# Partition variables. #===========#
 
-HDD=sda			## set bootloader location. ##
-DDI=/dev/sda		## set device for disklabel and installation. ##
-DLT=msdos		## set disklabel type. ##
-ROOTP=/dev/sda1		## set root partition. ##
-HOMEP=/dev/sda3		## set home partition. ##
-SWAP=/dev/sda2		## set swap partition. ##
+HDD="sda"		## set bootloader location. ##
+DDI="/dev/sda"		## set device for disklabel and installation. ##
+DLT="msdos"		## set MBR-disklabel type. ##
+ROOTP="/dev/sda1"	## set root partition. ##
+HOMEP="/dev/sda3"	## set home partition. ##
+SWAP="/dev/sda2"	## set swap partition. ##
 
-	umount $HOMEP
-	umount $ROOTP
-	swapoff $SWAP 2>/dev/null
-
-set -uo pipefail
-trap 's=$?; echo "$0: Error on line "$LINENO": $BASH_COMMAND"; exit $s' ERR
+	umount "${HOMEP}"			|| /bin/true
+	umount "${ROOTP}"			|| /bin/true
+	swapoff "${SWAP}" 2>/dev/null		|| /bin/true
 
 Partition(){
 
-	parted "$DDI" mklabel "$DLT"
-	parted "$DDI" mkpart primary ext4 0% 70%
-	parted "$DDI" set 1 boot on
-	parted "$DDI" mkpart primary linux-swap 70% 80%
-	parted "$DDI" mkpart primary ext4 80% 100%
+	parted "${DDI}" mklabel "$DLT"
+	parted "${DDI}" mkpart primary ext4 0% 70%
+	parted "${DDI}" set 1 boot on
+	parted "${DDI}" mkpart primary linux-swap 70% 80%
+	parted "${DDI}" mkpart primary ext4 80% 100%
 }
-
 formats(){
 
-	yes | mkfs.ext4 $ROOTP
-	yes | mkfs.ext4 $HOMEP
+	yes | mkfs.ext4 "${ROOTP}"
+	yes | mkfs.ext4 "${HOMEP}"
 	mkswap /dev/sda2
 }
-
 mounts(){
 
-	mount $ROOTP /mnt
-	mkdir -p /mnt/home
-	mount $HOMEP  /mnt/home
-	swapon $SWAP
+	mount  "${ROOTP}"	/mnt
+	mkdir -p		/mnt/home
+	mount  "${HOMEP}"	/mnt/home
+	swapon "${SWAP}"
 }
 
 #=====#=====# Local pacman cache/repo & mirrorlist #===========#
 
 setrepos(){
 
-	pacman -Sy --noconfirm --needed reflector wgetpaste
-
-#	echo 'Server = http://192.168X.XXX.XXX:XXXX/' > /etc/pacman.d/mirrorlist
-
+	pacman -Sy --noconfirm --needed reflector wgetpaste moreutils
+	echo 'Server = http://192.168.2.2:8080/' > /etc/pacman.d/mirrorlist
 	reflector --latest 5 --sort rate >> /etc/pacman.d/mirrorlist
-	echo; echo "Next we'll drop you in the mirrorlist in nano."
+	echo; echo " /etc/pacman.d/mirrorlist in editor next" ; echo
 	sleep 5
-	"${EDR}" /etc/pacman.d/mirrorlist
-}
 
+	cat /etc/pacman.d/mirrorlist | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp /etc/pacman.d/mirrorlist
+}
 install(){
 
 	pacstrap /mnt   base base-devel grub wget sudo\
@@ -93,9 +93,7 @@ install(){
 			xfce4 xfce4-goodies gvfs
 
 	genfstab -L /mnt > /mnt/etc/fstab
-
 }
-
 Configure(){
 
 	arch-chroot /mnt ln -sf /usr/share/zoneinfo/America/Los_Angeles		/etc/localtime
@@ -112,11 +110,10 @@ Configure(){
 
 	echo "127.0.1.1 ${HTN}.localdomain ${HTN}" >>				/mnt/etc/hosts
 	echo '# End of file' >>							/mnt/etc/hosts
-	# sed -i '/End/s/^/#/g' /mnt/etc/hosts
 
 	arch-chroot /mnt systemctl enable dhcpcd
 
-	arch-chroot /mnt grub-install --target=i386-pc /dev/$HDD
+	arch-chroot /mnt grub-install --target=i386-pc /dev/"${HDD}"
 	arch-chroot /mnt grub-mkconfig -o 					/boot/grub/grub.cfg
 
 	arch-chroot /mnt useradd -m -g users -G wheel -s /bin/bash "${URN}"
@@ -135,118 +132,164 @@ Configure(){
 
 	cp /mnt/etc/X11/xinit/xserverrc						/mnt/home/$URN/.xserverrc
 	sed -i '/exec/s/^/#/g'							/mnt/home/$URN/.xserverrc
-	echo 'exec /usr/bin/Xorg -keeptty -nolisten tcp $@ vt$XDG_VTNR' >>	/mnt/home/$URN/.xserverrc
+	echo 'exec /usr/bin/Xorg -keeptty -nolisten tcp "$@" vt"$XDG_VTNR"' >>  /mnt/home/$URN/.xserverrc
 	arch-chroot /mnt chown $URN						    /home/$URN/.xserverrc
-
 }
-
 mesg(){
 
 	echo " The install is done except verifying and editing config files."
 	echo " Answering no here will exit, completing the install."
 	echo " Answering no after this will skip the named file/s."; echo
 }
-
 asksure(){
-	echo -n " Proceed ? (Y/N)"
-	while read -r -n 1 -s answer 
-                   do
-                      if [[ $answer = [YyNn] ]] ; then 
-                         [[ $answer = [Yy] ]] && echo " Answered Yes " && XX=0 && break
-                         [[ $answer = [Nn] ]] && echo " Answered No  " && XX=1 && break
-                      fi
-                   done
-	return
+		echo -n " Proceed ? (Y/N)"
+		while read -r -n 1 -s answer 
+		do
+			if [[ $answer = [YyNn] ]] ; then 
+			   [[ $answer = [Yy] ]] && echo " Answered Yes " && XX=0 && break
+			   [[ $answer = [Nn] ]] && echo " Answered No  " && XX=1 && break
+			fi
+		done
+	reset
 }
-
 checking1(){
 		clear
 		echo; echo " Checking ~/.xinitrc in ${EDR}"
 		asksure
-		if [[ $XX = 0 ]]; then
-			"${EDR}" /mnt/home/$URN/.xinitrc
+	if	[[ $XX = 0 ]]; then
+		cat /mnt/home/$URN/.xinitrc | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp /mnt/home/"${URN}"/.xinitrc
+		reset
 			checking2
 		else
 			checking2 
-		fi
+	fi
 }
 checking2(){
 		clear
 		echo; echo " Checking ~/.xserverrc in ${EDR}"
 		asksure
-		if [[ $XX = 0 ]]; then
-			"${EDR}" /mnt/home/$URN/.xserverrc
+	if	[[ $XX = 0 ]]; then
+		cat /mnt/home/$URN/.xserverrc | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp  /mnt/home/"${URN}"/.xserverrc
+		reset
 			checking3
 		else
 			checking3 
-		fi
+	fi
 }
 checking3(){
 		clear
 		echo; echo " Checking /etc/hosts in ${EDR}"
 		asksure
-		if [[ $XX = 0 ]]; then
-			"${EDR}" /mnt/etc/hosts
+	if	[[ $XX = 0 ]]; then
+		cat /mnt/etc/hosts | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp  /mnt/etc/hosts
+		reset
 			checking4
 		else
 			checking4 
-		fi
+	fi
 }
 checking4(){
 		clear
 		echo; echo " Checking /etc/sudoers in ${EDR} with visudo"
 		asksure 
-		if [[ $XX = 0 ]]; then
-			EDITOR="${EDR}" visudo --file=/mnt/etc/sudoers
+	if	[[ $XX = 0 ]]; then
+		cat /mnt/etc/sudoers | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp  /mnt/etc/sudoers
+		EDITOR="${EDR}" visudo -c --file=/mnt/etc/sudoers
+		reset
 			checking5
 		else
 			checking5
-		fi
+	fi
 }
-
 checking5(){
 		clear
 		echo; echo " Checking /etc/locale.gen in ${EDR}"
 		asksure 
-		if [[ $XX = 0 ]]; then
-			"${EDR}" /mnt/etc/locale.gen
+	if	[[ $XX = 0 ]]; then
+		cat /mnt/etc/locale.gen | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp  /mnt/etc/locale.gen
+		reset
 			checking6
 		else
 			checking6
-		fi
+	fi
 }
-
 checking6(){
 		clear
 		echo; echo " Checking /etc/locale.conf in ${EDR}"
 		asksure 
-		if [[ $XX = 0 ]]; then
-			"${EDR}" /mnt/etc/locale.conf
+	if	[[ $XX = 0 ]]; then
+		cat /mnt/etc/locale.conf | EDITOR="${EDR}" vipe | awk '{print}' >tmp && mv tmp  /mnt/etc/locale.conf
+		reset
 			XX=1
-		fi
+	fi
 }
-
 umnts(){
-
-	umount $HOMEP 
-	umount $ROOTP
-	swapoff $SWAP
-	lurl=$(wgetpaste /root/inst.log 2>/dev/null )
-	surl=$(wgetpaste -u $lurl 2>/dev/null )
-	echo "Remote log long URL : $lurl"
-	echo "Remote log short URL: $surl"
-	echo; echo " Install Completed."; echo	
+	umount "${HOMEP}"
+	umount "${ROOTP}"
+	swapoff "${SWAP}"
 }
 
-## Run Functions ##
+### 'trap' below calls this function. WIP, Not passing vars.
+### Func file WORK AROUND for Not passing vars
 
-	Partition
-	formats
-	mounts
-	setrepos
-	install
-	Configure
-	mesg
-	asksure
-	if [[ $XX = 0 ]]; then checking1; fi
-	umnts
+cleanup(){
+
+if 	[[ $(<Func) != 9 ]]; then
+      # (( $Func < 9 )); then
+	umount "${HOMEP}"
+	umount "${ROOTP}"
+	swapoff "${SWAP}"  2>/dev/null
+	cat inst.log | tr -cd '\11\12\15\40-\176' > inst.log.bu
+	mv inst.log.bu inst.log
+	echo; tail -10 inst.log; echo
+	echo; echo "Something went wrong. ^ 10 last lines log ^. "
+	echo "  Func= $(<Func)"
+	pkill -9 inst
+	else
+	echo; echo " Successfully passed checks and completed cleanup. "; echo; exit
+fi
+}
+### Set trap for script crashes - exits 
+### Func file WORK AROUND for Not passing vars
+
+	trap 'cleanup' INT TERM EXIT
+
+###=====### Run Functions ###=====###
+{
+	Partition	; Fn1=1
+	formats		; Fn2=1
+	mounts		; Fn3=1
+	setrepos	; Fn4=1
+	install		; Fn5=1
+	Configure	; Fn6=1
+	mesg		; Fn7=1
+	asksure		; Fn8=1
+	if [[ $XX = 0 ]]; then checking1 ; fi
+
+lurl=$(wgetpaste /root/inst.log 2>/dev/null )
+surl=$(wgetpaste -u "${lurl}" 2>/dev/null )
+
+	echo ; echo "Remote log long URL : ${lurl}" >> /mnt/home/"${URN}"/inst.log
+	echo "Remote log short URL: ${surl}" >> /mnt/home/"${URN}"/inst.log ; echo
+	echo "Remote log long URL : ${lurl}"
+	echo "Remote log short URL: ${surl}"
+	cat inst.log | tr -cd '\11\12\15\40-\176' > inst.log.bu
+	mv inst.log.bu inst.log
+	cp /root/inst.log /mnt/home/${URN}/inst.log
+	arch-chroot /mnt chown "${URN}" /home/"${URN}"/inst.log
+	echo; echo " Install Completed, running checks."; echo
+
+	umnts		; Fn9=1
+
+### Check functions
+
+Fnsum=$((Fn1 + Fn2 + Fn3 + Fn4 + Fn5 + Fn6 + Fn7 + Fn8 + Fn9))
+
+	echo " Fnsum: ${Fnsum}"
+	echo "$Fnsum" >Func
+	echo " Func :" "$(<Func)"
+
+#=====#=====# Set logging #===========#
+
+} |& tee inst.log
+
