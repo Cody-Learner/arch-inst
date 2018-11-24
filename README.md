@@ -31,11 +31,12 @@ Verify file integrity: <br>
 To start the script run: <br>
  ./inst
 
-
-
-
-
-
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
 2018-11-23 [SOLVED] (logging below)          
 
