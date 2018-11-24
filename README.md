@@ -16,12 +16,12 @@ I'll leave getting it going to you.
 From the Arch install iso run:
 
 Fetch the script: <br>
- wget https://raw.githubusercontent.com/Cody-Learner/saist/master/inst <br>
+ wget https://raw.githubusercontent.com/Cody-Learner/inst/master/inst <br>
  chmod +x inst
 
 Or optionally, use tinyurl: <br>
- wget https://tinyurl.com/instarch <br> 
- mv instarch inst <br> 
+ wget https://tinyurl.com/cody-inst <br> 
+ mv cody-inst inst <br> 
  chmod +x inst
 
 Verify file integrity: <br>
