@@ -31,6 +31,25 @@ Verify file integrity: <br>
 To start the script run: <br>
  ./inst
 
+
+
+
+
+
+
+2018-11-23 [SOLVED] (logging below)          
+
+Went with vipe of the moreutils package, combined with command grouping across functions, pipe with stderr, ( ie: |& ) and tee. 
+However, using vipe was not without issues. It initially required a bunch of manual typing in nano to correcting file paths when implenented within a simple set of pipes. 
+Eventually figured out a workaround (more complex than originally, see script) that allows normal nano viewing, editing, and saving conf files without requiring a bunch of extra, error prone steps.
+Also made a first effort at expermenting with error detection, if it actually falls within that category. Just setting a variable (number 1) to each function if it finishes running.
+Then add vars up in the end, and use the sum in a cleanup function called with trap. Enjoyed implementing it, although obviously not as useful at helping with error trouble shooting as it is at 
+cleaning stuff up if a function fails or crashes.
+
+
+
+
+
 2018-11-19 EDIT: Logging is currently a wip, has changed, and is not yet feature stable.<br>
 
 Testing:
