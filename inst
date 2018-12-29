@@ -34,7 +34,7 @@ fi
 URN="jeff"	## Username      ##
 URP="test"	## User Password ##
 RTP="test"	## Root Password ##
-HTN="archtest"	## Hostname      ##
+HTN="Arch2018p12"	## Hostname      ##
 EDR="nano"	## Editor        ##
 
 #=====#=====# Partition variables. #===========#
@@ -88,9 +88,9 @@ install(){
 
 	pacstrap /mnt   base base-devel grub wget sudo\
 			xorg-server xorg-xinit xterm xorg-fonts xorg-twm\
-			virtualbox-guest-utils virtualbox-guest-modules-arch\
 			linux-headers polkit ttf-dejavu ttf-liberation leafpad\
-			xfce4 xfce4-goodies gvfs
+			xfce4 xfce4-goodies gvfs\
+			virtualbox-guest-utils virtualbox-guest-modules-arch\
 
 	genfstab -L /mnt > /mnt/etc/fstab
 }
@@ -120,6 +120,8 @@ Configure(){
 
 	echo "${URN}:${URP}" | chpasswd -R /mnt
 	echo   "root:${RTP}" | chpasswd -R /mnt
+
+	arch-chroot /mnt systemctl enable systemd-timesyncd.service
 
 	sed -i '/%wheel ALL=(ALL) ALL/s/^#//'					/mnt/etc/sudoers
 
@@ -258,7 +260,7 @@ fi
 {
 	Partition	; Fn1=1
 	formats		; Fn2=1
-	mounts		; Fn3=1
+	mounts		; Fn3=1 #; Fn1=1; Fn2=1
 	setrepos	; Fn4=1
 	install		; Fn5=1
 	Configure	; Fn6=1
