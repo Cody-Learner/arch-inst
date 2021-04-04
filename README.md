@@ -17,15 +17,15 @@ To run: <br>
  ./inst
 
 <br>
-<br>
-<br>
-<br>
+
 
 2021-04-04 UPDATE <br>
 
-Pulled this out and dusted off the cobwebs to build a few test installs.
+Permenant WIP status <br>
+Pulled this out and dusted off the cobwebs to build a few test installs. <br>
 Cleaned things up a bit and removed of some testing/experimental stuff. <br>
-
+Set up network to use systemd-networkd and systemd-resolved rather than dhcpcd. <br>
+Setup custom systemd 'display.service' for fullscreen resolution console. <br>
 
 
 
