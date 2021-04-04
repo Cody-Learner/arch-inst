@@ -1,32 +1,15 @@
 
-# Arch install script
+# Arch install script for virtualized hardware. 
 
-The inst script is my Arch install script written in bash. It installs Arch base + base-devel with an xfce DE. It's designed primairly as a template needing edited before use. 
-I'd like to think of it as somewhat of a balance between being minimal but also thorough enough to be a reasonable time saver, while making things easy for the user. <br>
-
-Tested in vbox and a work in process.<br>
-Note: I need to step things up with updating/replacing my preferred msdos partition table. As far as I know, there's not been new hardware 
-available that's compatible with this for quite some time.
-
-To run the inst script from the official Arch install iso:
-
-Download the latest Arch iso : https://www.archlinux.org/download/ <br>
-I'll leave getting it going to you.
+Needs edited to suit requirements. Will reformat/overwrite existing drives/partitions as is.
 
 From the Arch install iso run:
 
 Fetch the script: <br>
- wget https://raw.githubusercontent.com/Cody-Learner/inst/master/inst <br>
- chmod +x inst
+ curl https://raw.githubusercontent.com/Cody-Learner/inst/master/inst >inst <br>
 
-Or optionally, use tinyurl: <br>
- wget https://tinyurl.com/cody-inst <br> 
- mv cody-inst inst <br> 
- chmod +x inst
-
-Verify file integrity: <br>
- $ md5sum inst
-1a142b095ab160df69f5040f0ea216fa  inst
+Set the execution permission:  <br>
+ chmod +x inst  <br>
 
 To start the script run: <br>
  ./inst
@@ -35,10 +18,15 @@ To start the script run: <br>
 <br>
 <br>
 <br>
-<br>
-<br>
 
-2018-11-23 [SOLVED] (logging below)          
+2021-04-04 UPDATE <br>
+
+Pulled this out and dusted off the cobwebs. Cleaned things up a bit and removed of some testing/experimental stuff. <br>
+
+
+
+
+2018-11-23 [SOLVED] (logging below)   <br>
 
 Went with vipe of the moreutils package, combined with command grouping across functions, pipe with stderr, ( ie: |& ) and tee. 
 However, using vipe was not without issues. It initially required a bunch of manual typing in nano to correct file paths, when implenented within a simple set of pipes. 
