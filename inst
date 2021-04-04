@@ -93,7 +93,7 @@ install(){
 
 	## BASE VBOX INSTALL. EDIT LIST FOR INSTALLED PACKAGES ##
 
-	pacstrap /mnt   base linux linux-headers linux-firmware grub wget nano openssh sudo fbset terminus-font virtualbox-guest-utils
+	pacstrap /mnt   base linux grub wget nano openssh sudo fbset terminus-font
 
 		# dhcpcd
 		# xorg-server xorg-xinit xterm xorg-fonts xorg-twm \
