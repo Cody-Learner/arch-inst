@@ -11,7 +11,7 @@ Fetch the script: <br>
  curl https://raw.githubusercontent.com/Cody-Learner/inst/master/inst >inst <br>
 
 For less typing: >inst <br>
- curl https://tinyurl.com/myarchinstaller >inst <br>
+ curl -L https://tinyurl.com/myarchinstaller >inst <br>
 
 Set the execution bit:  <br>
  chmod +x inst  <br>
