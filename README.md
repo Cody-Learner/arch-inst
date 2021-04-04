@@ -19,17 +19,17 @@ To run: <br>
 <br>
 
 
-2021-04-04 UPDATE <br>
 
-Permenant WIP status <br>
-Pulled this out and dusted off the cobwebs to build a few test installs. <br>
-Cleaned things up a bit and removed of some testing/experimental stuff. <br>
-Set up network to use systemd-networkd and systemd-resolved rather than dhcpcd. <br>
-Setup custom systemd 'display.service' for fullscreen resolution console. <br>
+2021-04-04 UPDATE: <br>
+
+ * Permenant WIP status. <br>
+ * Pulled this out and dusted off the cobwebs to build a few test installs. <br>
+ * Cleaned things up a bit and removed of some testing/experimental stuff. <br>
+ * Set up network to use systemd-networkd and systemd-resolved rather than dhcpcd. <br>
+ * Setup custom systemd 'display.service' for fullscreen resolution console. <br>
 
 
-
-2018-11-23 [SOLVED] (logging below)   <br>
+2018-11-23: <br>
 
 Went with vipe of the moreutils package, combined with command grouping across functions, pipe with stderr, ( ie: |& ) and tee. 
 However, using vipe was not without issues. It initially required a bunch of manual typing in nano to correct file paths, when implenented within a simple set of pipes. 
@@ -37,9 +37,6 @@ Eventually figured out a workaround (more complex than originally, see script) t
 Also made a first effort at expermenting with error detection, if it actually falls within that category. Just setting a variable (number 1) to each function if it finishes running.
 Then add vars up in the end, and use the sum in a cleanup function called with trap. Enjoyed implementing it, although obviously not as useful at helping with error trouble shooting as it is at 
 cleaning stuff up if a function fails or crashes.
-
-
-
 
 
 2018-11-19 EDIT: Logging is currently a wip, has changed, and is not yet feature stable.<br>
