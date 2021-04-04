@@ -1,17 +1,19 @@
 
-# Arch install script for virtualized hardware. 
+# Arch install script
 
-Needs edited to suit requirements. Will reformat/overwrite existing drives/partitions as is.
+For virtualized hardware only. <br>
+Needs edited to suit requirements. <br>
+Will reformat/overwrite existing drives/partitions as is. <br>
 
-From the Arch install iso run:
+From the Arch install iso:
 
 Fetch the script: <br>
  curl https://raw.githubusercontent.com/Cody-Learner/inst/master/inst >inst <br>
 
-Set the execution permission:  <br>
+Set the execution bit:  <br>
  chmod +x inst  <br>
 
-To start the script run: <br>
+To run: <br>
  ./inst
 
 <br>
@@ -21,7 +23,8 @@ To start the script run: <br>
 
 2021-04-04 UPDATE <br>
 
-Pulled this out and dusted off the cobwebs. Cleaned things up a bit and removed of some testing/experimental stuff. <br>
+Pulled this out and dusted off the cobwebs to build a few test installs.
+Cleaned things up a bit and removed of some testing/experimental stuff. <br>
 
 
 
