@@ -27,6 +27,7 @@ To run: <br>
  * Cleaned things up a bit and removed of some testing/experimental stuff. <br>
  * Set up network to use systemd-networkd and systemd-resolved rather than dhcpcd. <br>
  * Setup custom systemd 'display.service' for fullscreen resolution console. <br>
+ * Logging: /root/inst.log in live install medium and ~/install.log in new install. <br>
 
 
 2018-11-23: <br>
